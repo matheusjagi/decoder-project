@@ -41,7 +41,7 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public ModuleModel findOneByCourse(UUID courseId, UUID moduleId) {
-        ModuleModel module = moduleRepository.findModuleIntoCourse(moduleId, courseId);
+        ModuleModel module = moduleRepository.findModuleIntoCourse(courseId, moduleId);
 
         if (Objects.isNull(module)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Module not found for this course.");

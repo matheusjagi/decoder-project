@@ -15,7 +15,7 @@ public interface ModuleRepository extends JpaRepository<ModuleModel, UUID> {
     ModuleModel findByTitle(String title);
 
     @Query("select module from ModuleModel module where module.id = :moduleId and module.course.id = :courseId")
-    ModuleModel findModuleIntoCourse(@Param("moduleId") UUID moduleId, @Param("courseId") UUID courseId);
+    ModuleModel findModuleIntoCourse(@Param("courseId") UUID courseId, @Param("moduleId") UUID moduleId);
 
     @Query("select module from ModuleModel module where module.course.id = :courseId")
     List<ModuleModel> findAllModulesIntoCourse(@Param("courseId") UUID courseId);
