@@ -22,7 +22,7 @@ public class UserDto {
     }
 
     @JsonView({UserView.UserPut.class, UserView.PasswordPut.class, UserView.ImagePut.class})
-    private UUID userId;
+    private UUID id;
 
     @NotBlank(groups = UserView.RegistrationPost.class)
     @Size(min = 4, max = 50, groups = UserView.RegistrationPost.class)

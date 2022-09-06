@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private static void createdLinkHateoas(Page<UserModel> userModelPage) {
         if (!userModelPage.isEmpty()) {
             userModelPage.toList().forEach(user ->
-                user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel())
+                user.add(linkTo(methodOn(UserController.class).getOneUser(user.getId())).withSelfRel())
             );
         }
     }
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel update(UserDto userDto) {
-        UserModel user = findById(userDto.getUserId());
+        UserModel user = findById(userDto.getId());
         user.setFullName(userDto.getFullName());
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setCpf(userDto.getCpf());
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(UserDto userDto) {
-        UserModel user = findById(userDto.getUserId());
+        UserModel user = findById(userDto.getId());
         checkEqualsPassword(userDto, user);
         user.setPassword(userDto.getPassword());
         user.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateImage(UserDto userDto) {
-        UserModel user = findById(userDto.getUserId());
+        UserModel user = findById(userDto.getId());
         user.setImageUrl(userDto.getImageUrl());
         user.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
         userRepository.save(user);

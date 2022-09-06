@@ -5,7 +5,13 @@ import com.pd.course.dtos.ModuleDto;
 import com.pd.course.models.CourseModel;
 import com.pd.course.models.ModuleModel;
 import com.pd.course.services.ModuleService;
+import com.pd.course.specifications.SpecificationTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,19 +35,11 @@ public class ModuleController {
     @Autowired
     ModuleService moduleService;
 
-    @GetMapping("/modules")
-    public ResponseEntity<List<ModuleModel>> getAll() {
-        return ResponseEntity.ok(moduleService.findAll());
-    }
-
-    @GetMapping("/modules/{moduleId}")
-    public ResponseEntity<ModuleModel> getById(@PathVariable("moduleId") UUID moduleId) {
-        return ResponseEntity.ok(moduleService.findById(moduleId));
-    }
-
     @GetMapping("/courses/{courseId}/modules")
-    public ResponseEntity<List<ModuleModel>> getAllModulesByCourse(@PathVariable("courseId") UUID courseId) {
-        return ResponseEntity.ok(moduleService.findAllByCourse(courseId));
+    public ResponseEntity<Page<ModuleModel>> getAllModulesByCourse(@PathVariable("courseId") UUID courseId,
+                                                                   SpecificationTemplate.ModuleSpec spec,
+                                                                   @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(moduleService.findAllByCourse(SpecificationTemplate.moduleCourseId(courseId).and(spec), pageable));
     }
 
     @GetMapping("/courses/{courseId}/modules/{moduleId}")

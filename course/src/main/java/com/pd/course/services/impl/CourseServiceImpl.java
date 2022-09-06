@@ -6,15 +6,16 @@ import com.pd.course.repositories.CourseRepository;
 import com.pd.course.services.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,8 +32,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseModel> findAll() {
-        return courseRepository.findAll();
+    public Page<CourseModel> findAll(Specification<CourseModel> spec, Pageable pageable) {
+        return courseRepository.findAll(spec, pageable);
     }
 
     @Override
