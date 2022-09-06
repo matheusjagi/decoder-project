@@ -1,7 +1,7 @@
 server:
   port: 8082
   error:
-    include-message: always
+    include-message: Always
 
 spring:
   datasource:
@@ -17,3 +17,13 @@ spring:
     properties:
       hibernate:
         show_sql: true
+  output:
+    ansi:
+      enabled: Always
+
+logging:
+  level:
+    com.pd: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO

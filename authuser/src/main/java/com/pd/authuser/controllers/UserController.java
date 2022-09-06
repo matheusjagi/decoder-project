@@ -5,6 +5,7 @@ import com.pd.authuser.dtos.UserDto;
 import com.pd.authuser.models.UserModel;
 import com.pd.authuser.services.UserService;
 import com.pd.authuser.specifications.SpecificationTemplate;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import java.util.UUID;
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/users")
+@Log4j2
 public class UserController {
 
     @Autowired
@@ -35,17 +37,20 @@ public class UserController {
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(SpecificationTemplate.UserSpec spec,
                                                        @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        log.debug("GET request to search a users page.");
         Page<UserModel> userModelPage = userService.findAll(spec, pageable);
         return ResponseEntity.ok(userModelPage);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserModel> getOneUser(@PathVariable(value = "userId") UUID userId) {
+        log.debug("GET request to lookup a user with ID: {}", userId);
         return ResponseEntity.ok(userService.findById(userId));
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "userId") UUID userId) {
+        log.debug("DELETE request to delete a user with ID: {}", userId);
         userService.deleteById(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully.");
     }
@@ -54,6 +59,7 @@ public class UserController {
     public ResponseEntity<UserModel> updateUser(@RequestBody
                                                 @Validated(UserDto.UserView.UserPut.class)
                                                 @JsonView(UserDto.UserView.UserPut.class) UserDto userDto) {
+        log.debug("PUT request to updated a user: {}", userDto);
         return ResponseEntity.ok(userService.update(userDto));
     }
 
@@ -61,6 +67,7 @@ public class UserController {
     public ResponseEntity<Object> updatePassword(@RequestBody
                                                  @Validated(UserDto.UserView.PasswordPut.class)
                                                  @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto) {
+        log.debug("PUT request to updated password a user: {}", userDto);
         userService.updatePassword(userDto);
         return ResponseEntity.ok().body("Password updated successfully");
     }
@@ -69,6 +76,7 @@ public class UserController {
     public ResponseEntity<Object> updateImage(@RequestBody
                                               @Validated(UserDto.UserView.ImagePut.class)
                                               @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto) {
+        log.debug("PUT request to updated image a user: {}", userDto);
         userService.updateImage(userDto);
         return ResponseEntity.ok().body("Image updated successfully");
     }

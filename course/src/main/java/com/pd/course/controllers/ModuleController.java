@@ -6,6 +6,7 @@ import com.pd.course.models.CourseModel;
 import com.pd.course.models.ModuleModel;
 import com.pd.course.services.ModuleService;
 import com.pd.course.specifications.SpecificationTemplate;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
+@Log4j2
 public class ModuleController {
 
     @Autowired
@@ -39,24 +41,28 @@ public class ModuleController {
     public ResponseEntity<Page<ModuleModel>> getAllModulesByCourse(@PathVariable("courseId") UUID courseId,
                                                                    SpecificationTemplate.ModuleSpec spec,
                                                                    @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        log.debug("GET request to search all pages of a course modules.");
         return ResponseEntity.ok(moduleService.findAllByCourse(SpecificationTemplate.moduleCourseId(courseId).and(spec), pageable));
     }
 
     @GetMapping("/courses/{courseId}/modules/{moduleId}")
     public ResponseEntity<ModuleModel> getOneModuleByCourse(@PathVariable("courseId") UUID courseId,
-                                                                  @PathVariable("moduleId") UUID moduleId) {
+                                                            @PathVariable("moduleId") UUID moduleId) {
+        log.debug("GET request to search for a module with ID [{}] from course with ID [{}]", moduleId, courseId);
         return ResponseEntity.ok(moduleService.findOneByCourse(courseId, moduleId));
     }
 
     @PostMapping("/courses/{courseId}/modules")
     public ResponseEntity<ModuleModel> saveModule(@PathVariable("courseId") UUID courseId,
                                                   @RequestBody @Valid ModuleDto moduleDto) {
+        log.debug("POST request to save a module {} from course with ID [{}]", moduleDto, courseId);
         return ResponseEntity.status(HttpStatus.CREATED).body(moduleService.save(courseId, moduleDto));
     }
 
     @DeleteMapping("/courses/{courseId}/modules/{moduleId}")
     public ResponseEntity<Object> deleteModule(@PathVariable("courseId") UUID courseId,
                                                @PathVariable("moduleId") UUID moduleId) {
+        log.debug("DELETE request to delete a module ID [{}] from course with ID [{}]", moduleId, courseId);
         moduleService.delete(courseId, moduleId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Module deleted successfully.");
     }
@@ -64,6 +70,7 @@ public class ModuleController {
     @PutMapping("/courses/{courseId}/modules")
     public ResponseEntity<Object> updateModule(@PathVariable("courseId") UUID courseId,
                                                @RequestBody @Valid ModuleDto moduleDto) {
+        log.debug("PUT request to updated a module {} from course with ID [{}]", moduleDto, courseId);
         return ResponseEntity.ok(moduleService.update(courseId, moduleDto));
     }
 }
