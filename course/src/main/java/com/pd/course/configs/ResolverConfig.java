@@ -1,4 +1,4 @@
-package com.pd.authuser.configs;
+package com.pd.course.configs;
 
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
 import org.springframework.context.annotation.Configuration;
